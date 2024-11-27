@@ -28,6 +28,7 @@ $app->withFacades();
 $app->withEloquent();
 
 /*
+/*
 |--------------------------------------------------------------------------
 | Register Container Bindings
 |--------------------------------------------------------------------------
@@ -59,8 +60,8 @@ $app->singleton(
 |
 */
 
-$app->configure('app');
-$app->configure('database');
+$app->configure('auth');
+$app->configure('cors');
 
 /*
 |--------------------------------------------------------------------------
@@ -73,13 +74,15 @@ $app->configure('database');
 |
 */
 
-// $app->middleware([
+$app->middleware([
+    Illuminate\Http\Middleware\HandleCors::class
 //     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+//    Fruitcake\Cors\HandleCors::class,
+]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -92,9 +95,11 @@ $app->configure('database');
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+//$app->register(Fruitcake\Cors\CorsServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

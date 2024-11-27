@@ -17,12 +17,22 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/db-test', function () use ($router) {
-    try {
-        DB::connection()->getPdo();
-        return "Database connection is successful!";
-    } catch (\Exception $e) {
-        return "Could not connect to the database. Error: " . $e->getMessage();
-    }
+//$router->get('/db-test', function () use ($router) {
+//    try {
+//        DB::connection()->getPdo();
+//        return "Database connection is successful!";
+//    } catch (\Exception $e) {
+//        return "Could not connect to the database. Error: " . $e->getMessage();
+//    }
+//});
+
+$router->group(['prefix' => 'api/v1'], function () use ($router) {
+    /** @see \App\Http\Controllers\AuthController */
+    $router->post('login', 'AuthController@login');
+//    $router->post('register', 'AuthController@register');
+
+    $router->group(['middleware' => ['auth']], function () use ($router) {
+
+    });
 });
 
