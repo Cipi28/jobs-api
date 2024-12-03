@@ -31,6 +31,19 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->post('login', 'AuthController@login');
 //    $router->post('register', 'AuthController@register');
 
+    /** @see \App\Http\Controllers\CompaniesController */
+    $router->group(['prefix' => 'companies'], function () use ($router) {
+        $router->get('/', 'CompaniesController@index');
+        $router->get('/{companyId}', 'CompaniesController@show');
+        $router->get('/{companyId}/jobs', 'CompaniesController@getJobsByCompany');
+    });
+
+    /** @see \App\Http\Controllers\JobsController */
+    $router->group(['prefix' => 'jobs'], function () use ($router) {
+        $router->get('/', 'JobsController@index');
+        $router->get('/{jobId}', 'JobsController@show');
+    });
+
     $router->group(['middleware' => ['auth']], function () use ($router) {
 
     });

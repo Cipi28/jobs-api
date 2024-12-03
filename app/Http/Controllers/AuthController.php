@@ -35,7 +35,6 @@ class AuthController extends Controller
             'email' => 'required|email|max:255',
             'password' => 'required',
         ]);
-//        dd(app('hash')->make("1234"));
         try {
 
             $credentials = request(['email', 'password']);
