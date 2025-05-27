@@ -74,44 +74,35 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|string|min:4|max:25',
-            'email' => 'required|email|max:50',
+            'firstName' => 'required|string|min:2|max:50',
+            'lastName' => 'required|string|min:2|max:50',
+            'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:6|max:35',
-            'address' => 'string|max:30',
-            'role' => 'required'
+            'city' => 'required|string|max:100',
         ]);
+
         try {
-
-            $credentials = request(['name', 'email', 'password', 'address', 'role']);
-
-            // Create a new user
             $user = new User();
-            $user->name = $credentials['name'];
-            $user->email = $credentials['email'];
-            $user->password = app('hash')->make($credentials['password']);
-            $user->address = $credentials['address'];
-            $user->role = $credentials['role'];
+            $user->first_name = $request->input('firstName');
+            $user->last_name = $request->input('lastName');
+            $user->email = $request->input('email');
+            $user->password = app('hash')->make($request->input('password'));
+            $user->city = $request->input('city');
             $user->save();
 
-            if (! $token = auth()->attempt($credentials)) {
-                return response()->json(['error' => 'Unauthorized'], 404);
+            $token = auth()->attempt($request->only('email', 'password'));
+
+            if (!$token) {
+                return response()->json(['error' => 'Unauthorized'], 401);
             }
 
-            /** @var User $user */
-            $user = auth()->user();
-
-            /** @var LoginService $loginService */
             $loginService = app(LoginService::class);
             $responseData = $loginService->generateUserStorageData($user, auth());
-        } catch (TokenExpiredException $e) {
-            return response(null, [], $e->getStatusCode());
-        } catch (TokenInvalidException $e) {
-            return response(null, [], $e->getStatusCode());
-        } catch (JWTException $e) {
-            return response(null, [], $e->getStatusCode());
-        }
 
-        return response()->json($responseData);
+            return response()->json($responseData);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Could not register user'], 500);
+        }
     }
 
     /**

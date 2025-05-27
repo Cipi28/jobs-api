@@ -29,7 +29,7 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
     /** @see \App\Http\Controllers\AuthController */
     $router->post('login', 'AuthController@login');
-//    $router->post('register', 'AuthController@register');
+    $router->post('register', 'AuthController@register');
 
     /** @see \App\Http\Controllers\CompaniesController */
     $router->group(['prefix' => 'companies'], function () use ($router) {
