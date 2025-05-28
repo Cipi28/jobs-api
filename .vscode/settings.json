@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/57b16487-b962-4b62-baed-6410c55d481e/resourceGroups/appsvc_linux_westeurope/providers/Microsoft.Web/sites/jobs-api",
+    "appService.deploySubpath": "."
+}
