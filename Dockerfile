@@ -1,32 +1,31 @@
-# Use the official PHP image with necessary extensions
 FROM php:8.2-fpm
 
-# Set working directory
-WORKDIR /var/www
-
-# Install system dependencies
+# Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    zip \
+    unzip \
     git \
     curl \
-    unzip \
-    libzip-dev \
-    zip \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    && docker-php-ext-install pdo pdo_mysql zip
+    && docker-php-ext-install pdo pdo_pgsql
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy existing application directory contents
+# Set working directory
+WORKDIR /var/www
+
+# Copy existing app
 COPY . .
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Expose port 8080 for Render
+# Permissions
+RUN chmod -R 775 bootstrap/cache storage
+
+# Expose port (if needed)
 EXPOSE 8080
 
-# Set the command to run your app
-CMD php -S 0.0.0.0:8080 -t public
+# Command to run app (adjust if using a server like nginx or php -S)
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
