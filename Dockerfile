@@ -21,9 +21,6 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Permissions
-RUN chmod -R 775 bootstrap/cache storage
-
 # Expose port (if needed)
 EXPOSE 8080
 
