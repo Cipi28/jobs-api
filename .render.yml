@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: jobs-api
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        value: base64:your-generated-key-here
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        value: db.your-supabase-host.supabase.co
+      - key: DB_PORT
+        value: 5432
+      - key: DB_DATABASE
+        value: your-supabase-db-name
+      - key: DB_USERNAME
+        value: your-supabase-username
+      - key: DB_PASSWORD
+        value: your-supabase-password
